@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter&family=Playfair+Display&display=swap"
+      rel="stylesheet"
+    />
+    <title>ClearLight</title>
+  </head>
+  <body>
+    <div class="modes-wrapper">
+      <div class="modes-container">
+        <div class="features">
+          <h2>Предустановленные режимы работы</h2>
+          <p class="features-description">
+            Аппарат ClearLight помогает успешно устранять различные деффекты
+            кожи:
+          </p>
+          <ul>
+            <li><span>—</span> Удаление волос</li>
+            <li><span>—</span> Акне</li>
+            <li><span>—</span> Сосудистые поражения</li>
+            <li><span>—</span> Омоложение кожи</li>
+            <li><span>—</span> Гиперпигментация</li>
+          </ul>
+          <button>Запросить КП</button>
+        </div>
+        <div class="canvas-container">
+          <img
+            id="clearLight"
+            class="clear-light"
+            src="https://images2.imgbox.com/88/02/MtJoFUFp_o.png"
+            alt=""
+          />
+          <canvas id="canvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </body>
+  <style>
+    html {
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+      text-rendering: optimizeSpeed;
+      font-family: "Inter", sans-serif;
+    }
+    .modes-wrapper {
+      position: relative;
+      width: 100%;
+      height: 770px;
+      background-color: #fafafa;
+
+      overflow: hidden;
+    }
+    .modes-container {
+      width: 100%;
+      max-width: 1400px;
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      overflow: hidden;
+    }
+    .features {
+      width: 40%;
+    }
+    .features ul {
+      list-style: none;
+      padding: 0;
+    }
+    .features li {
+      color: #201335;
+      font-size: 20px;
+      padding: 12px 0;
+    }
+    .features li span {
+      color: #ce6dc3;
+    }
+
+    .features h2 {
+      color: #201335;
+      font-family: Playfair Display;
+      font-size: 44px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+
+    .features-description {
+      color: #818181;
+      font-family: Inter;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 150%; /* 30px */
+    }
+
+    .features button {
+      display: inline-flex;
+      padding: 20px 31px;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border-radius: 43px;
+      outline: none;
+      border: none;
+      background: var(
+        --linear,
+        linear-gradient(14deg, #cf63c3 0%, #e093d8 100%)
+      );
+      color: #ffffff;
+    }
+
+    .canvas-container {
+      width: 60%;
+
+      /* position: relative; */
+      /* display: inline-block; */
+      background: url("https://images2.imgbox.com/0e/2e/0kM5MkgA_o.png");
+      background-size: 800px 800px;
+      background-repeat: no-repeat;
+    }
+
+    .clear-light {
+      position: absolute;
+      width: 130px;
+      margin-left: -50px;
+      margin-top: 30px;
+      top: 100px;
+      left: 850px;
+    }
+
+    canvas {
+      background: transparent;
+      cursor: none;
+    }
+  </style>
+
+  <script>
+    var url = "https://images2.imgbox.com/89/16/FIiGj8Px_o.png";
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    var img = new Image();
+    img.src = url;
+    img.onload = function () {
+      var width = 800;
+      var height = 800;
+
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+    };
+
+    // var isPress = false;
+    // var old = null;
+    // canvas.addEventListener("mousedown", function (e) {
+    //   isPress = true;
+    //   old = { x: e.offsetX, y: e.offsetY };
+    // });
+
+    canvas.addEventListener("mousemove", function (e) {
+      var x = e.offsetX;
+      var y = e.offsetY;
+      ctx.globalCompositeOperation = "destination-out";
+
+      ctx.beginPath();
+      ctx.arc(x, y + 30, 30, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.lineWidth = 100;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      // old = { x: x, y: y };
+    });
+    // canvas.addEventListener("mouseup", function (e) {
+    //   isPress = false;
+    // });
+
+    let clearLight = document.getElementById("clearLight");
+
+    var timesPerSecond = 30;
+    var wait = false;
+
+    function moveClearLight(param) {
+      if (!wait) {
+        console.log(param);
+        clearLight.style.top = param.clientY + "px";
+        clearLight.style.left = param.clientX + "px";
+
+        wait = true;
+
+        setTimeout(function () {
+          wait = false;
+        }, 1000 / timesPerSecond);
+      }
+    }
+
+    let canvasContainer = document.querySelector(".canvas-container");
+
+    canvasContainer.addEventListener("mouseenter", () => {
+      console.log(1);
+      canvas.addEventListener("mousemove", moveClearLight);
+    });
+
+    canvasContainer.addEventListener("mouseleave", () => {
+      console.log(2);
+      canvas.removeEventListener("mousemove", moveClearLight);
+    });
+  </script>
+</html>
